@@ -26,6 +26,16 @@ function registerEvents(client) {
         process.exit(1);
     });
 
+    // ── Sessão salva no Supabase ──────────────────────────────────────────────
+    client.on('remote_session_saved', () => {
+        logger.success('✔ Sessão persistida no Supabase — próximo boot não precisará de QR Code!');
+    });
+
+    // ── Estado da conexão ─────────────────────────────────────────────────────
+    client.on('change_state', (state) => {
+        logger.info(`Estado da conexão: ${state}`);
+    });
+
     // ── Pronto ────────────────────────────────────────────────────────────────
     client.on('ready', () => {
         loadCommands();
@@ -43,8 +53,8 @@ function registerEvents(client) {
     // ── Desconexão ────────────────────────────────────────────────────────────
     client.on('disconnected', (reason) => {
         logger.warn(`Bot desconectado: ${reason}`);
-        // O LocalAuth tentará reconectar automaticamente na próxima inicialização
     });
 }
 
 module.exports = { registerEvents };
+
