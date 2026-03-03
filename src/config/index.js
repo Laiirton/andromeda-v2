@@ -34,7 +34,6 @@ module.exports = {
     // ─── Puppeteer ────────────────────────────────────────────────────────────
     puppeteer: {
         headless: true,
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH, // Necessário no Docker/Render
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
