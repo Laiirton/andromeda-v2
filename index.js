@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config(); // Carrega o .env antes de qualquer outro módulo
+
 const logger = require('./src/core/logger');
 const client = require('./src/core/client');
 const { registerEvents } = require('./src/core/eventHandler');
