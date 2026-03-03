@@ -14,27 +14,45 @@ module.exports = {
     adminOnly: false,
 
     async execute(message, args, client) {
+        // ── Resolver a fonte da mídia: direta ou citada (reply) ───────────────
+        let mediaSource = message;
+
         if (!message.hasMedia) {
-            await message.reply(
-                '📎 Envie uma *imagem* ou *vídeo* com a legenda *!fig* para criar a figurinha.'
-            );
-            return;
+            if (message.hasQuotedMsg) {
+                const quoted = await message.getQuotedMessage();
+                if (quoted.hasMedia) {
+                    mediaSource = quoted;
+                } else {
+                    await message.reply(
+                        '📎 A mensagem citada não contém mídia.\n' +
+                        'Envie uma *imagem* ou *vídeo* com a legenda *!fig*, ou responda uma mídia com *!fig*.'
+                    );
+                    return;
+                }
+            } else {
+                await message.reply(
+                    '📎 Envie uma *imagem* ou *vídeo* com a legenda *!fig*, ' +
+                    'ou responda uma mídia com *!fig*.'
+                );
+                return;
+            }
         }
 
         // ── Verificar tamanho antes de baixar ─────────────────────────────────
         const maxBytes = config.sticker.maxFileSizeMB * 1024 * 1024;
-        if (message._data?.size && message._data.size > maxBytes) {
+        if (mediaSource._data?.size && mediaSource._data.size > maxBytes) {
             await message.reply(
                 `❌ Arquivo muito grande. Máximo: *${config.sticker.maxFileSizeMB}MB*.`
             );
             return;
         }
 
-        const media = await message.downloadMedia();
+        const media = await mediaSource.downloadMedia();
         if (!media || !media.data) {
             await message.reply('❌ Não foi possível baixar a mídia. Tente novamente.');
             return;
         }
+
 
         const mimeType = media.mimetype || '';
         const buffer = Buffer.from(media.data, 'base64');
