@@ -94,13 +94,18 @@ module.exports = {
         // ── Enviar figurinha ──────────────────────────────────────────────────
         const stickerMedia = new MessageMedia('image/webp', stickerBuffer.toString('base64'));
 
+        // Nome de quem criou a figurinha
+        const contact = await message.getContact();
+        const authorName = contact.pushname || contact.name || message.from.split('@')[0];
+
         try {
             await message.reply(stickerMedia, null, {
                 sendMediaAsSticker: true,
-                stickerAuthor: config.sticker.author,
-                stickerName: config.sticker.pack,
+                stickerName: `Criado por ${authorName}`,
+                stickerAuthor: config.bot.name,
             });
-            logger.success(`Figurinha ${isAnimated ? 'animada ' : ''}enviada para ${message.from}`);
+            logger.success(`Figurinha ${isAnimated ? 'animada ' : ''}enviada para ${message.from} (autor: ${authorName})`);
+
         } catch (sendErr) {
             logger.error('Erro ao enviar figurinha via WhatsApp', sendErr);
             await message.reply(
