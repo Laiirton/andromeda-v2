@@ -1,12 +1,18 @@
 {
-  "name": "whatsapp-sticker-bot",
-  "version": "1.0.0",
-  "description": "WhatsApp bot que cria figurinhas com o comando !fig",
+  "name": "andromeda-v2",
+  "version": "2.0.0",
+  "description": "Bot WhatsApp modular e extensível — Andromeda V2",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "figuras",
+    "sticker"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -15,5 +21,8 @@
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.33.5",
     "whatsapp-web.js": "^1.34.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
