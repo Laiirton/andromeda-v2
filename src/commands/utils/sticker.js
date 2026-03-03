@@ -46,8 +46,23 @@ module.exports = {
             stickerBuffer = await imageToWebP(buffer);
 
         } else if (mimeType.startsWith('video/') || mimeType.includes('gif')) {
-            logger.info('Convertendo vídeo/GIF em figurinha animada...');
-            stickerBuffer = await videoToAnimatedWebP(buffer, mimeType);
+            // Avisar o usuário que pode demorar (vídeos pesados = múltiplas tentativas)
+            await message.reply('⏳ Processando figurinha animada, aguarde...');
+
+            logger.info('Convertendo vídeo/GIF em figurinha animada (com recompressão automática)...');
+            try {
+                stickerBuffer = await videoToAnimatedWebP(buffer, mimeType);
+            } catch (convErr) {
+                logger.error('Todas as tentativas de conversão falharam', convErr);
+                await message.reply(
+                    '❌ Não foi possível criar a figurinha animada.\n\n' +
+                    '💡 *Dicas:*\n' +
+                    '• Envie um vídeo mais curto (máx. 6s)\n' +
+                    '• Prefira vídeos menores que 5MB\n' +
+                    '• Tente no formato MP4 ou GIF'
+                );
+                return;
+            }
             isAnimated = true;
 
         } else {
@@ -58,14 +73,22 @@ module.exports = {
             return;
         }
 
+        // ── Enviar figurinha ──────────────────────────────────────────────────
         const stickerMedia = new MessageMedia('image/webp', stickerBuffer.toString('base64'));
 
-        await message.reply(stickerMedia, null, {
-            sendMediaAsSticker: true,
-            stickerAuthor: config.sticker.author,
-            stickerName: config.sticker.pack,
-        });
-
-        logger.success(`Figurinha ${isAnimated ? 'animada ' : ''}enviada para ${message.from}`);
+        try {
+            await message.reply(stickerMedia, null, {
+                sendMediaAsSticker: true,
+                stickerAuthor: config.sticker.author,
+                stickerName: config.sticker.pack,
+            });
+            logger.success(`Figurinha ${isAnimated ? 'animada ' : ''}enviada para ${message.from}`);
+        } catch (sendErr) {
+            logger.error('Erro ao enviar figurinha via WhatsApp', sendErr);
+            await message.reply(
+                '❌ A figurinha foi criada mas não pôde ser enviada.\n\n' +
+                '💡 Tente com um vídeo mais curto ou menor.'
+            );
+        }
     },
 };
