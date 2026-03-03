@@ -3,7 +3,7 @@
 module.exports = {
     // ─── Bot ─────────────────────────────────────────────────────────────────
     bot: {
-        name: 'Andromeda',
+        name: 'Coiso',
         version: '2.0.0',
         prefix: '!',
         locale: 'pt-BR',
