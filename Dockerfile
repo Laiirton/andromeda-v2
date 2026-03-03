@@ -9,7 +9,7 @@ RUN apt-get update \
     && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
     && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-      --no-install-recommends \
+    --no-install-recommends \
     # Install ffmpeg for media processing
     && apt-get install -y ffmpeg \
     && rm -rf /var/lib/apt/lists/*
@@ -23,6 +23,9 @@ WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
+
+# Copy patches directory for postinstall script
+COPY patches/ ./patches/
 
 # Install dependencies
 RUN npm ci
