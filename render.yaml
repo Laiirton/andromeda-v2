@@ -1,8 +1,9 @@
 services:
-  - type: worker
+  - type: web # Web Service (plano free disponível)
     name: andromeda-v2
     runtime: node
     region: oregon
+    plan: free
 
     # Instala dependências do Chromium/Puppeteer no Linux
     buildCommand: |
@@ -18,7 +19,13 @@ services:
 
     startCommand: npm start
 
+    # Porta exposta pelo servidor de health check (src/core/healthServer.js)
+    # O Render usa essa rota para verificar se o serviço está saudável
+    healthCheckPath: /health
+
     envVars:
+      - key: PORT
+        value: 3000
       - key: SUPABASE_URL
         sync: false # Preencha no painel do Render → Environment
       - key: SUPABASE_SERVICE_KEY

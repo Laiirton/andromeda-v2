@@ -3,8 +3,12 @@
 require('dotenv').config(); // Carrega o .env antes de qualquer outro módulo
 
 const logger = require('./src/core/logger');
+const { startHealthServer } = require('./src/core/healthServer');
 const client = require('./src/core/client');
 const { registerEvents } = require('./src/core/eventHandler');
+
+// Inicia o servidor HTTP de health check (mantém o Render Web Service acordado)
+startHealthServer();
 
 // Exibir banner inicial
 logger.banner();
