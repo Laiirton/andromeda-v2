@@ -44,4 +44,12 @@ module.exports = {
             '--disable-gpu',
         ],
     },
+
+    // ─── Supabase ─────────────────────────────────────────────────────────────
+    // Configure as variáveis de ambiente SUPABASE_URL e SUPABASE_SERVICE_KEY
+    supabase: {
+        url: process.env.SUPABASE_URL,
+        key: process.env.SUPABASE_SERVICE_KEY,
+    },
 };
+
