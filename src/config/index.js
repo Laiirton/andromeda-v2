@@ -11,8 +11,8 @@ module.exports = {
 
     // ─── Figurinhas (Stickers) ────────────────────────────────────────────────
     sticker: {
-        author: 'Andromeda',
-        pack: 'Andromeda V2',
+        author: 'Coiso',
+        pack: 'Coiso',
         maxDurationSeconds: 6,
         maxFileSizeMB: 10,
         quality: 80,
