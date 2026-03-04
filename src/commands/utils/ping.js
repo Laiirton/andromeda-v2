@@ -14,9 +14,8 @@ module.exports = {
     adminOnly: false,
 
     async execute(message, args, client) {
-        const send = Date.now();
-        const sent = await message.reply('🏓 Calculando...');
-        const roundtrip = Date.now() - send;
+        const messageTimestamp = (message.timestamp || Math.floor(Date.now() / 1000)) * 1000;
+        const roundtrip = Date.now() - messageTimestamp;
 
         const uptimeMs = Date.now() - startedAt;
         const uptime = formatUptime(uptimeMs);
@@ -24,12 +23,12 @@ module.exports = {
         const text = [
             `🏓 *Pong!*`,
             ``,
-            `⚡ *Latência:* ${roundtrip}ms`,
+            `⚡ *Latência:* ${Math.max(0, roundtrip)}ms`,
             `⏱️  *Online há:* ${uptime}`,
             `🤖 *Bot:* ${config.bot.name} v${config.bot.version}`,
         ].join('\n');
 
-        await sent.edit(text);
+        await message.reply(text);
     },
 };
 
