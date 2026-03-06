@@ -23,7 +23,7 @@ Escaneie o QR Code que aparecer no terminal com o WhatsApp do seu celular.
 | Comando         | Aliases                        | Descrição                               |
 |-----------------|--------------------------------|-----------------------------------------|
 | `!fig`          | `!sticker`, `!figurinha`       | Converte imagem/vídeo em figurinha      |
-| `!ajuda`        | `!help`, `!h`, `!comandos`     | Lista todos os comandos                 |
+| `!menu`         | `!help`, `!h`, `!comandos`, `!ajuda` | Lista todos os comandos           |
 | `!ping`         | `!status`, `!uptime`           | Verifica latência e tempo online        |
 
 ---
@@ -78,7 +78,7 @@ andromeda-v2/
 │   ├── commands/
 │   │   └── utils/
 │   │       ├── sticker.js       ← !fig
-│   │       ├── help.js          ← !ajuda
+│   │       ├── help.js          ← !menu
 │   │       └── ping.js          ← !ping
 │   └── utils/
 │       ├── media.js             ← Conversão imagem/vídeo → WebP
