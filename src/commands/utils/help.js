@@ -4,10 +4,10 @@ const { getCommands } = require('../../core/commandHandler');
 const config = require('../../config');
 
 module.exports = {
-    name: 'ajuda',
-    aliases: ['help', 'h', 'comandos'],
+    name: 'menu',
+    aliases: ['help', 'h', 'comandos', 'ajuda'],
     description: 'Exibe a lista de comandos disponíveis',
-    usage: '!ajuda [comando]',
+    usage: '!menu [comando]',
     cooldown: 5,
     adminOnly: false,
 
@@ -58,7 +58,7 @@ module.exports = {
             `📋 *Comandos disponíveis:*`,
             cmdLines,
             ``,
-            `💡 Use *${prefix}ajuda [comando]* para detalhes de um comando específico.`,
+            `💡 Use *${prefix}menu [comando]* para detalhes de um comando específico.`,
         ].join('\n');
 
         await message.reply(text);
