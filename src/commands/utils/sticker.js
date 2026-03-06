@@ -104,7 +104,7 @@ module.exports = {
                 stickerName: `Criado por ${authorName}`,
                 stickerAuthor: config.bot.name,
             });
-            logger.success(`Figurinha ${isAnimated ? 'animada ' : ''}enviada para ${message.from} (autor: ${authorName})`);
+            logger.success(`Figurinha ${isAnimated ? 'animada ' : ''}enviada para ${authorName}`);
 
         } catch (sendErr) {
             logger.error('Erro ao enviar figurinha via WhatsApp', sendErr);
