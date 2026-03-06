@@ -70,7 +70,18 @@ async function handleMessage(message, client) {
     const command = commands.get(commandName);
     if (!command) return;
 
-    const sender = message.from;
+    // Em grupos message.from é o ID do grupo; message.author é quem enviou de fato.
+    // Em conversas privadas message.author é undefined — fallback para message.from.
+    const sender = message.author || message.from;
+
+    // Resolver nome de exibição do remetente para os logs
+    let senderLabel;
+    try {
+        const contact = await message.getContact();
+        senderLabel = contact.pushname || contact.name || contact.number || sender.split('@')[0];
+    } catch (_) {
+        senderLabel = sender.split('@')[0];
+    }
 
     // ── Verificação de permissão admin ────────────────────────────────────────
     if (command.adminOnly && !permissions.isAdmin(sender)) {
@@ -89,7 +100,7 @@ async function handleMessage(message, client) {
     }
 
     // ── Execução ──────────────────────────────────────────────────────────────
-    logger.command(`${config.bot.prefix}${command.name}`, sender);
+    logger.command(`${config.bot.prefix}${command.name}`, senderLabel);
     try {
         await command.execute(message, args, client);
     } catch (err) {
