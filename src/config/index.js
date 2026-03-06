@@ -20,6 +20,13 @@ module.exports = {
         fps: 15,
     },
 
+    // ─── Áudio ────────────────────────────────────────────────────────────────
+    audio: {
+        maxFileSizeMB: 50,
+        voiceBitrate: '128k',  // OGG Opus (nota de voz / PTT) — transparente com Opus
+        // MP3 usa VBR q:0 (~240–320 kbps) — sem configuração extra necessária
+    },
+
     // ─── Cooldowns (segundos) ─────────────────────────────────────────────────
     cooldown: {
         default: 3,
