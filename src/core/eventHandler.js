@@ -40,7 +40,7 @@ function registerEvents(client) {
     client.on('ready', () => {
         loadCommands();
         logger.success('Bot pronto e aguardando mensagens.');
-        logger.info('Envie !ajuda no WhatsApp para ver os comandos disponíveis.');
+        logger.info('Envie !menu no WhatsApp para ver os comandos disponíveis.');
     });
 
     // ── Mensagens ─────────────────────────────────────────────────────────────
