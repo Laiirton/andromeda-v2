@@ -146,6 +146,72 @@ function _runFfmpeg(inputPath, outputPath, opts) {
 }
 
 /**
+ * Extrai o áudio de um vídeo e retorna como buffer MP3 ou OGG Opus.
+ * @param {Buffer} buffer     - Buffer da mídia de entrada
+ * @param {string} mimeType   - MIME type da mídia ('video/mp4', 'audio/mp4', etc.)
+ * @param {'mp3'|'ogg'} format - Formato de saída
+ * @returns {Promise<Buffer>}
+ */
+async function videoToAudio(buffer, mimeType, format = 'mp3') {
+    const ext = mimeType.includes('mp4')  ? '.mp4'
+        : mimeType.includes('webm') ? '.webm'
+        : mimeType.includes('ogg')  ? '.ogg'
+        : mimeType.includes('3gp')  ? '.3gp'
+        : mimeType.includes('mpeg') ? '.mp3'
+        : mimeType.includes('m4a')  ? '.m4a'
+        : '.mp4';
+
+    const uid = `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const tmpDir = os.tmpdir();
+    const inputPath  = path.join(tmpDir, `andromeda_audio_in_${uid}${ext}`);
+    const outputPath = path.join(tmpDir, `andromeda_audio_out_${uid}.${format}`);
+
+    fs.writeFileSync(inputPath, buffer);
+
+    try {
+        await _extractAudio(inputPath, outputPath, format);
+        const audioBuffer = fs.readFileSync(outputPath);
+        return audioBuffer;
+    } finally {
+        cleanup(inputPath, outputPath);
+    }
+}
+
+/**
+ * Executa ffmpeg para extrair/converter áudio.
+ * @param {string} inputPath
+ * @param {string} outputPath
+ * @param {'mp3'|'ogg'} format
+ * @returns {Promise<void>}
+ */
+function _extractAudio(inputPath, outputPath, format) {
+    return new Promise((resolve, reject) => {
+        const { voiceBitrate } = config.audio;
+
+        const isOgg = format === 'ogg';
+        const outputOptions = isOgg
+            // Opus: 128k é transparente; 48kHz obrigatório pelo codec
+            ? ['-vn', '-acodec', 'libopus', '-b:a', voiceBitrate, '-ar', '48000']
+            // MP3: VBR qualidade máxima (~240–320 kbps); sem forçar sample rate (preserva o da fonte)
+            : ['-vn', '-acodec', 'libmp3lame', '-q:a', '0'];
+
+        ffmpeg(inputPath)
+            .outputOptions(outputOptions)
+            .save(outputPath)
+            .on('end', resolve)
+            .on('error', (err) => {
+                // Sem trilha de áudio → ffmpeg falha com "does not contain any stream"
+                const msg = err.message || '';
+                if (msg.includes('does not contain any stream') || msg.includes('no streams')) {
+                    reject(new Error('NO_AUDIO_STREAM'));
+                } else {
+                    reject(err);
+                }
+            });
+    });
+}
+
+/**
  * Remove arquivos temporários silenciosamente.
  * @param {...string} paths
  */
@@ -155,4 +221,4 @@ function cleanup(...paths) {
     }
 }
 
-module.exports = { imageToWebP, videoToAnimatedWebP };
+module.exports = { imageToWebP, videoToAnimatedWebP, videoToAudio };
