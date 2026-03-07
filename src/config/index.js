@@ -39,8 +39,14 @@ module.exports = {
     ],
 
     // ─── Puppeteer ────────────────────────────────────────────────────────────
+    // Para enviar vídeos (MP4/H.264) é necessário usar o Chrome instalado,
+    // pois o Chromium embutido não suporta codecs licenciados (H.264/AAC).
+    // Defina CHROME_EXECUTABLE_PATH no .env para apontar para o Chrome.
     puppeteer: {
         headless: true,
+        ...(process.env.CHROME_EXECUTABLE_PATH
+            ? { executablePath: process.env.CHROME_EXECUTABLE_PATH }
+            : {}),
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
