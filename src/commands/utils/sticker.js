@@ -97,11 +97,19 @@ module.exports = {
         // Nome de quem criou a figurinha
         const contact = await message.getContact();
         const authorName = contact.pushname || contact.name || message.from.split('@')[0];
+        const createdAt = new Date().toLocaleString('pt-BR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
 
         try {
             await message.reply(stickerMedia, null, {
                 sendMediaAsSticker: true,
-                stickerName: `Criado por ${authorName}`,
+                stickerName: `Criado por ${authorName}\r\n${createdAt}`,
                 stickerAuthor: config.bot.name,
             });
             logger.success(`Figurinha ${isAnimated ? 'animada ' : ''}enviada para ${authorName}`);
